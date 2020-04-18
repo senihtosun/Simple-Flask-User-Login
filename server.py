@@ -1,7 +1,6 @@
 import flask_login
 from flask_login import LoginManager, UserMixin
 from flask import Flask, render_template, url_for, redirect, request
-from flask_socketio import SocketIO
 
 login_manager = LoginManager()
 
@@ -10,14 +9,13 @@ app = Flask(__name__,
         static_folder = 'static',
         template_folder = 'templates')
 
-app.secret_key = 'osmanlineverdies'
-
-socketio = SocketIO(app)
+app.secret_key = 'very_secret'
 
 # Login Manager Config
 login_manager.init_app(app)
 
-users = {'admin':{'pw':'tosun'}}
+# you can add more users here
+users = {'admin':{'pw':'password'}}
 
 
 class User(UserMixin):
@@ -72,17 +70,6 @@ def protect():
 def logout():
   flask_login.logout_user()
   return 'Logged out'
-
-
-# Socket IO CONFIG
-def messageReceived(methods=['GET', 'POST']):
-    print('Message was received')
-
-
-@socketio.on('my event')
-def handle_my_custom_event(json, methods=['GET', 'POST']):
-    print('received my event: ' + str(json))
-    socketio.emit('my response', json, callback=messageReceived)
 
 
 
